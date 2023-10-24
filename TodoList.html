@@ -11,13 +11,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Raleway:wght@100&display=swap" rel="stylesheet">
     <style>
-         body {
-            background-color: #f5f5f5;
+        body {
             font-family: 'Montserrat', sans-serif;
             text-align: center;
+            background-image: url('/assets/BG2.jpg');
+            background-size: cover
         }
         .header {
-            background-color: #333;
+            background-color: #0e604d;
             color: white;
             padding: 20px;
             font-size: 36px;
@@ -25,8 +26,8 @@
             font-family: 'Montserrat';
         }
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
+            max-width: 800px;
+            margin: auto;
         }
 
         .input-container {
@@ -68,7 +69,6 @@
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-
         .todo-item {
             display: flex;
             justify-content: space-between;
@@ -97,32 +97,56 @@
             justify-content: space-between;
             flex-direction: row;
             max-width: 1000px;
+            margin-bottom: 5px;
         }
         .Todo-list-title{
-            flex: 0 0 150px;
+            flex: 0 0 450px;
             overflow: hidden;
-            white-space: nowrap;
+            white-space: wrap;
         }
         .Todo-list-date{
+            margin-left: 20px;
             flex: 1;
         }
         .deleteButton{
             flex: 1;
+        }
+        .outer-container{
+            background-color: rgb(10, 74, 70);
+            opacity: .8;
+            z-index: -1;
+            width : 900px;
+            margin: auto;
+            padding-top : 20px;
+            padding-bottom: 40px;
+            margin-top : 20px;
+            border-radius: 30px;
         }
     </style>
     
 </head>
 <body>
     <div class="header">TODO LIST</div>
-
-    <div class="container">
-        <div class="input-container">
-            <input id="text-title" type="text" placeholder="Add a new task">
-            <input id="date-picker" type="date">
-            <button class="add-button" onclick="addTodo()">Add Todo</button>
+    <div class="outer-container">
+        <div class="container">
+            <div class="input-container">
+                <input id="text-title" type="text" placeholder="Add a new task">
+                <input id="date-picker" type="date">
+                <button class="add-button" onclick="addTodo()">Add Todo</button>
+            </div>
+            <div id="Todo-list" class="todo-list"></div>
         </div>
-        <div id="Todo-list" class="todo-list"></div>
     </div>
+    
+    <script>
+        const textTitle = document.getElementById('text-title');
+        textTitle.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                addTodo();
+            }
+        });
+    </script>
 
     <script> 
     let todos;
@@ -202,10 +226,12 @@
             todos.forEach(function (todo){
             const title_element = document.createElement('div');
             title_element.id = 'Todo-list-title';
+            title_element.className = 'Todo-list-title';
             title_element.innerText = todo.title;
             const date_element = document.createElement('div');
             date_element.innerText = todo.duedate;
             date_element.id = 'Todo-list-date';
+            date_element.className = 'Todo-list-date';
 
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'delete';
@@ -224,6 +250,8 @@
             todo_individual_container.appendChild(deleteButton);
 
             todolist.appendChild(todo_individual_container);
+
+            document.getElementById('text-title').value='';
         });
         }
 
