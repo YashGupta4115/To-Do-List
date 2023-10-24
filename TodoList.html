@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Todo List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Raleway:wght@100&display=swap" rel="stylesheet">
+    <style>
+         body {
+            background-color: #f5f5f5;
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+        }
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            font-size: 36px;
+            font-weight: bold;
+            font-family: 'Montserrat';
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="date"] {
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        .add-button {
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            width : 150px;
+        }
+
+        .add-button:hover {
+            background-color: #555;
+        }
+        .todo-list {
+            text-align: left;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .delete-button {
+            background-color: #ff5555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .delete-button:hover {
+            background-color: #ff3333;
+        }
+
+        .todo_individual_container{
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: row;
+            max-width: 1000px;
+        }
+        .Todo-list-title{
+            flex: 0 0 150px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .Todo-list-date{
+            flex: 1;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="header">TODO LIST</div>
+
+    <div class="container">
+        <div class="input-container">
+            <input id="text-title" type="text" placeholder="Add a new task">
+            <input id="date-picker" type="date">
+            <button class="add-button" onclick="addTodo()">Add Todo</button>
+        </div>
+        <div id="Todo-list" class="todo-list"></div>
+    </div>
+
+    <script> 
+    let todos;
+    const savedData = JSON.parse(localStorage.getItem('todos'));
+
+    if(Array.isArray(savedData)){
+        todos = savedData;
+    }
+        
+    render();
+
+        function addTodo() {
+            const todotitle = document.getElementById('text-title');
+            const texttitle = todotitle.value;
+            
+            const datePicker = document.getElementById('date-picker');
+            const datePicker_data = datePicker.value;
+            if(datePicker_data === ''){
+                alert("Date not selected! Value auto selected for today's date!");
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
+                const day = today.getDate().toString().padStart(2, '0');    
+                const datePicker_Data = year+'-'+month+'-'+day;
+                datePicker.value = datePicker_Data;
+                const id = ''+new Date().getTime();
+
+                todos.push({
+                    title : texttitle,
+                    duedate : datePicker_Data,
+                    id : id
+                });
+
+                saveTodos();
+
+                render();
+
+            }
+            else {
+                const id = ''+new Date().getTime();
+
+                todos.push({
+                    title : texttitle,
+                    duedate : datePicker_data,
+                    id : id
+                });
+
+                saveTodos();
+
+                render();
+            }
+        }
+
+        function deleteTodo(event){
+            const deleteButton = event.target;
+            const idToDelete = deleteButton.id;
+
+            todos = todos.filter(function(todo){
+                if(todo.id === idToDelete){
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+            saveTodos();
+            render();
+        }
+
+        function saveTodos() {
+            localStorage.setItem('todos' ,JSON.stringify(todos));
+        }
+
+        function render() {
+
+            document.getElementById('Todo-list').innerHTML = '';
+
+            todos.forEach(function (todo){
+            const title_element = document.createElement('div');
+            title_element.id = 'Todo-list-title';
+            title_element.innerText = todo.title;
+            const date_element = document.createElement('div');
+            date_element.innerText = todo.duedate;
+            date_element.id = 'Todo-list-date';
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'delete';
+            deleteButton.style = 'margin-left: 12px;';
+            deleteButton.id = todo.id;
+            deleteButton.className = 'delete-button';
+
+            deleteButton.onclick = deleteTodo;
+
+
+            const todolist = document.getElementById('Todo-list');
+            const todo_individual_container = document.createElement('div');
+            todo_individual_container.className = 'todo_individual_container';
+            todo_individual_container.appendChild(title_element);
+            todo_individual_container.appendChild(date_element);
+            todo_individual_container.appendChild(deleteButton);
+
+            todolist.appendChild(todo_individual_container);
+        });
+        }
+
+        
+    </script>
+    
+</body>
+
+</html>
