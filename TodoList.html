@@ -155,6 +155,8 @@
     if(Array.isArray(savedData)){
         todos = savedData;
     }
+
+    todos = [];
         
     render();
 
@@ -180,7 +182,7 @@
                 todos.push({
                     title : texttitle,
                     duedate : datePicker_Data,
-                    id : id
+                    id : id,
                 });
 
                 saveTodos();
@@ -246,7 +248,7 @@
             deleteButton.className = 'delete-button';
 
             deleteButton.onclick = deleteTodo;
-
+                console.log("Test");
 
             const todolist = document.getElementById('Todo-list');
             const todo_individual_container = document.createElement('div');
