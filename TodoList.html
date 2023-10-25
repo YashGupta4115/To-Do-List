@@ -161,8 +161,11 @@
         function addTodo() {
             const todotitle = document.getElementById('text-title');
             const texttitle = todotitle.value;
-            
-            const datePicker = document.getElementById('date-picker');
+            if(texttitle === ''){
+                alert("Please enter any 'To Do' Task!");
+            }
+            else {
+                const datePicker = document.getElementById('date-picker');
             const datePicker_data = datePicker.value;
             if(datePicker_data === ''){
                 alert("Date not selected! Value auto selected for today's date!");
@@ -198,6 +201,9 @@
 
                 render();
             }
+            }
+            
+            
         }
 
         function deleteTodo(event){
